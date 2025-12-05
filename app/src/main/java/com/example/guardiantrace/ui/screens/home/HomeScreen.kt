@@ -148,9 +148,11 @@ fun HomeScreen(
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(0.dp),
+                contentPadding = PaddingValues(
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(menuItems) { item ->
                     MenuCard(item = item)
