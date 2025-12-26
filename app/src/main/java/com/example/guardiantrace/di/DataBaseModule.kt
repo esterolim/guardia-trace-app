@@ -6,6 +6,7 @@ import com.example.guardiantrace.data.local.dao.AttachmentDao
 import com.example.guardiantrace.data.local.dao.EmergencyContactDao
 import com.example.guardiantrace.data.local.dao.IncidentDao
 import com.example.guardiantrace.data.local.database.GuardianTraceDatabase
+import com.example.guardiantrace.data.security.DatabaseKeyProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,13 +20,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataBaseModule {
+    @Provides
+    @Singleton
+    fun provideDatabaseKeyProvider(
+        @ApplicationContext context: Context
+    ): DatabaseKeyProvider {
+        return DatabaseKeyProvider(context)
+    }
 
     @Provides
     @Singleton
     fun provideDatabase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        keyProvider: DatabaseKeyProvider
     ): GuardianTraceDatabase {
-        val passphrase = SQLiteDatabase.getBytes("guardian_trace_secure_key_2024".toCharArray())
+        // Obtain passphrase from secure storage (encrypted shared preferences)
+        val passphrase = SQLiteDatabase.getBytes(keyProvider.getDatabasePassphrase().toCharArray())
         val factory = SupportFactory(passphrase)
 
         return Room.databaseBuilder(
