@@ -244,7 +244,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 
 ## 👥 Authors
 
-- **Developer**: Your Name (@github)
+- **Developer**: Bruna Ester(@github)
 
 ## 🙏 Acknowledgments
 
