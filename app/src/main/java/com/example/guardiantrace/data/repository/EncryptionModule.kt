@@ -2,6 +2,7 @@ package com.example.guardiantrace.data.repository
 
 import com.example.guardiantrace.data.encryption.EncryptionManager
 import com.example.guardiantrace.data.encryption.HashingManager
+import com.example.guardiantrace.data.security.MemoryZeroingUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,4 +24,11 @@ object EncryptionModule {
     fun provideHashingManager(): HashingManager {
         return HashingManager()
     }
+
+    @Provides
+    @Singleton
+    fun provideMemoryZeroingUtil(): MemoryZeroingUtil {
+        return MemoryZeroingUtil()
+    }
 }
+

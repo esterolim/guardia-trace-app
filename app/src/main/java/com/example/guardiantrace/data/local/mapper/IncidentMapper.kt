@@ -5,10 +5,6 @@ import com.example.guardiantrace.domain.module.Incident
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-/**
- * Mapper between IncidentEntity (data layer) and Incident (domain layer)
- * Follows clean architecture separation of concerns
- */
 object IncidentMapper {
 
     /**
