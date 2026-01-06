@@ -25,10 +25,10 @@ interface AttachmentDao {
     suspend fun deleteAttachment(attachment: AttachmentEntity)
 
     @Query("SELECT * FROM attachments WHERE incident_id = :incidentId ORDER BY created_at DESC")
-    suspend fun getAttachmentsByIncidentId(incidentId: Long): Flow<List<AttachmentEntity>>
+    fun getAttachmentsByIncidentId(incidentId: Long): Flow<List<AttachmentEntity>>
 
     @Query("SELECT * FROM attachments WHERE incident_id = :incidentId AND file_type = :fileType")
-    suspend fun getAttachmentsByType(incidentId: Long, fileType: String): Flow<List<AttachmentEntity>>
+    fun getAttachmentsByType(incidentId: Long, fileType: String): Flow<List<AttachmentEntity>>
 
     @Query("SELECT COUNT(*) FROM attachments WHERE incident_id = :incidentId")
     fun getAttachmentCount(incidentId: Long): Flow<Int>

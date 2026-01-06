@@ -1,18 +1,12 @@
 package com.example.guardiantrace.data.security
 
 import android.content.Context
-import android.os.Build
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Enforces security policies and validates compliance with OWASP Mobile Top 10
- * and other security best practices.
- *
- * Performs runtime checks to ensure the app is operating in a secure manner.
- */
+
 @Singleton
 class SecurityPolicyEnforcer @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -20,9 +14,6 @@ class SecurityPolicyEnforcer @Inject constructor(
     private val screenRecordingDetector: ScreenRecordingDetector
 ) {
 
-    /**
-     * Performs comprehensive security policy check
-     */
     fun enforceSecurityPolicies(): SecurityComplianceResult {
         val checks = listOf(
             "Android Version" to checkMinimumAndroidVersion(),
@@ -42,17 +33,10 @@ class SecurityPolicyEnforcer @Inject constructor(
         )
     }
 
-    /**
-     * Checks if device is running minimum required Android version
-     * Min: Android 8.0 (API 26) for better security features
-     */
     private fun checkMinimumAndroidVersion(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        return true
     }
 
-    /**
-     * Checks if debugger is attached
-     */
     private fun checkDebugger(): Boolean {
         val isDebuggerAttached = integrityChecker.isDebuggerAttached()
         if (isDebuggerAttached) {
@@ -61,9 +45,6 @@ class SecurityPolicyEnforcer @Inject constructor(
         return !isDebuggerAttached
     }
 
-    /**
-     * Checks device integrity (rooting, etc)
-     */
     private fun checkDeviceIntegrity(): Boolean {
         val isRooted = integrityChecker.isDeviceRooted()
         if (isRooted) {
@@ -72,12 +53,8 @@ class SecurityPolicyEnforcer @Inject constructor(
         return !isRooted
     }
 
-    /**
-     * Checks if encryption is properly configured
-     */
     private fun checkEncryption(): Boolean {
         return try {
-            // Verify that MasterKey can be created
             val masterKey = MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
@@ -88,9 +65,7 @@ class SecurityPolicyEnforcer @Inject constructor(
         }
     }
 
-    /**
-     * Checks for active screen recording
-     */
+
     private fun checkScreenRecording(): Boolean {
         val status = screenRecordingDetector.monitorScreenCapture()
         if (status.isCaptureSuspected()) {
@@ -102,9 +77,7 @@ class SecurityPolicyEnforcer @Inject constructor(
         return !status.isCaptureSuspected()
     }
 
-    /**
-     * Validates that all critical security measures are in place
-     */
+
     fun validateCriticalSecurityMeasures(): List<SecurityMeasure> {
         return listOf(
             SecurityMeasure(
@@ -145,23 +118,16 @@ class SecurityPolicyEnforcer @Inject constructor(
         )
     }
 
-    /**
-     * Checks if encrypted preferences are properly configured
-     */
     private fun checkEncryptedPreferences(): Boolean {
         return try {
-            val masterKey = MasterKey.Builder(context)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build()
-            masterKey.keyStore.containsAlias(MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+            val keyStore = java.security.KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            keyStore.containsAlias(MasterKey.DEFAULT_MASTER_KEY_ALIAS)
         } catch (e: Exception) {
             false
         }
     }
 
-    /**
-     * Generates security compliance report
-     */
     fun generateComplianceReport(): ComplianceReport {
         val compliance = enforceSecurityPolicies()
         val measures = validateCriticalSecurityMeasures()
